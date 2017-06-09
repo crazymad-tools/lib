@@ -8,45 +8,50 @@
 #ifndef _PTR_H
 #define _PTR_H
 
+#include "Atomic.h"
+#include <stdlib.h>
+
 template<typename T>
 class Ptr {
 public:
-	Ptr(T *kernel = NULL) {
-		using_count = new int(1);
-		this->kernel = kernel;
+	Ptr(T *value_ = NULL) {
+		this->value_ = value_;
+		if (this->value_ == NULL) {
+			value_ = new T();
+		}
+		count_++;
 	}	
 	Ptr(Ptr &src) {
-		using_count = src.using_count;
-		kernel = src.kernel;
-		(*using_count)++;
+		value_ = src.value_;
+		count_.getAndAdd(++src.count_);
 	}
 	~Ptr() {
-		if (--(*using_count) == 0) {
-			delete T;
-			delete using_count;
+		if (--count_ == 0) {
+			delete value_;
 		} 
 	}
 	T& operator*() {
-		return *kernel;
+		return *value_;
 	}
 	Ptr& operator=(Ptr &src) {
-		if (*using_count == 1) {
-			delete using_count;
-			delete kernel;
+		if (count_.get() == 1) {
+			delete value_;
 		}
-		using_count = src.using_count;
-		kernel = src.kernel;
+		count_++;
+		src.count_++;
+		value_ = src.value_;
 	}
-	Ptr& operator=(T *src) {
-		if (*using_count == 1) {
-			delete kernel;
-		}
-		kernel = src
+	long long get_count() {
+		return static_cast<long long>(count_.get());
+	}
+	friend T& operator*() {
+		return *value_;
 	}
 
 private:
-	int *using_count;
-	T *kernel;
+	//int *using_count;
+	T *value_;
+	muduo::AtomicInt64 count_;
 
 };
 
