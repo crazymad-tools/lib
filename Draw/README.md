@@ -4,11 +4,15 @@
 
 API介绍：
 
-```void move(int x, int y)```
+```cpp
+void move(int x, int y)
+```
 
 将光标移动到行号为x，列号为y的位置上
 
-```void reset(int x1, int y1, int x2, int y2)```
+```cpp
+void reset(int x1, int y1, int x2, int y2)
+```
 
 将以左上角顶点和右下角顶点确定出来的矩形区域内的字符全部擦除
 
