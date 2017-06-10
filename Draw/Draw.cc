@@ -70,3 +70,22 @@ int Draw::getCol() {
 int Draw::getRow() {
 	return row;
 }
+void Draw::border() {
+	border(1, 1, row, col);
+}
+void Draw::border(int x1, int y1, int x2, int y2) {
+	if (x1 > x2) {
+		int tmp = x1;
+		x1 = x2;
+		x2 = tmp;
+	}
+	if (y1 > y2) {
+		int tmp = y1;
+		y1 = y2;
+		y2 = tmp;
+	}
+	line(x1, y1, x1, y2, '_');
+	line(x2, y1, x2, y2, '_');
+	line(x1+1, y1, x2, y1, '|');
+	line(x1+1, y2, x2, y2, '|');
+}

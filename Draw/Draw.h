@@ -22,6 +22,8 @@ public:
 	int getCol();
 	int getRow();
 	void move(int x, int y);
+	void border();
+	void border(int x1, int y1, int x2, int y2);
 };
 
 #endif
