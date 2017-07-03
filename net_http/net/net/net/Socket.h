@@ -18,6 +18,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <crazy/net/net_def.h>
 
 struct SocketData {
 	sockaddr_in addr;
@@ -29,19 +30,22 @@ public:
 	Socket(char ip[20], int port);		// 指定ip地址
 	Socket(int port);					// 默认本机ip地址
 	Socket(struct SocketData socketData);// 默认构造函数
+	Socket() { }
 	
-	void Accept(struct SocketData* peer);
+	void setFd(int fd);
+	void setSocketData(SocketData socketData);
+	bool init();			// 一般用于服务器端初始化套接字
 	bool Bind();
 	void Listen(int len);
+	void Accept(struct SocketData* peer);
 	bool Connect();
-	int Read(struct SocketData* peer, char* buf);
-	int Read(char* buf);
+	int Read(struct SocketData* peer, char* buf, int len=BUFSIZE);
+	int Read(char* buf, int len=BUFSIZE);
 	int Write(struct SocketData* peer, char* buf, int len);
 	int Write(char* buf, int len);
 	void Close();
-	bool init();			// 一般用于服务器端初始化套接字
-	void setFd(int fd);
-	//int getFd();
+	int getFd();
+	char* ipToString(char* buf = NULL);
 
 private:
 	char m_ip[20];

@@ -7,9 +7,9 @@
 
 #include <iostream>
 #include <Socket.h>
-#include <net_def.h>
 
 using namespace std;
+		
 
 int main() {
 	char buf[BUFSIZE] = { 0 };

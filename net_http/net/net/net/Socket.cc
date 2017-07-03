@@ -6,7 +6,7 @@
  *********************************************************/
 
 #include <Socket.h>
-#include <net_def.h>
+//#include <net_def.h>
 
 Socket::Socket(char ip[20], int port) {
 	socketData.fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -47,11 +47,11 @@ bool Socket::Connect() {
 	}
 	return true;
 }
-int Socket::Read(struct SocketData* peer, char* buf) {
-	return read(peer->fd, buf, BUFSIZE);
+int Socket::Read(struct SocketData* peer, char* buf, int len) {
+	return read(peer->fd, buf, len);
 }
-int Socket::Read(char* buf) {
-	return read(socketData.fd, buf, BUFSIZE);
+int Socket::Read(char* buf, int len) {
+	return read(socketData.fd, buf, len);
 }
 int Socket::Write(struct SocketData* peer, char* buf, int len) {
 	return write(peer->fd, buf, len);
@@ -72,7 +72,17 @@ bool Socket::init() {
 void Socket::setFd(int fd) {
 	this->socketData.fd = fd;
 }
-/*int getFd() {
-	return fd;
-}*/
-
+int Socket::getFd() {
+	return socketData.fd;
+}
+void Socket::setSocketData(SocketData socketData) {
+	this->socketData = socketData;
+}
+char* Socket::ipToString(char* buf) {
+	char ip[20] = "\0";
+	inet_ntop(AF_INET, (void*)&socketData.addr, ip, 20);
+	if (buf) {
+		strcpy(buf, ip);
+	} 
+	return ip;
+}
